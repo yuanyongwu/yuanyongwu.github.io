@@ -14,7 +14,7 @@
 			}
 			.ball{
 				background-size: cover;
-				background-image: url(img/red.png);
+				background-image: url(/img/red.png);
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -128,7 +128,7 @@
 			var redball={};
 			redball.__proto__=new Bubble();
 			this.isred=true;
-			redball.objdiv.style.backgroundImage="url(img/blue.png)";
+			redball.objdiv.style.backgroundImage="url(/img/blue.png)";
 			balls.push(redball);
 			redball.moving=function(){};
 			document.getElementsByClassName("box")[0].onmousemove=function(e){
@@ -156,3 +156,4 @@
 		</script>
 	</body>
 </html>
+
