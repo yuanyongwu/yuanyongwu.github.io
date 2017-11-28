@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			.box{
+				width: 500px;
+				height: 300px;
+				border: solid 1px red;
+				margin: 50px auto;
+				position: relative;
+				overflow: hidden;
+			}
+			.ball{
+				background-size: cover;
+				background-image: url(img/red.png);
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="box"></div>
+		<script type="text/javascript">
+			var balls=[];
+			function Bubble(){
+				var width=500;
+				var height=300;
+			   this.isred=false;
+			    
+				this.init=function(){
+					this.v=Math.random()*5;
+					this.angle=Math.random()*360;
+				 	this.vx=Math.cos(Math.PI/180*this.angle)*this.v;
+					this.vy=Math.sin(Math.PI/180*this.angle)*this.v;
+					this.w=Math.random()*20+30;
+					this.h=this.w;
+					this.l=Math.random()*width;
+					this.t=Math.random()*height;
+					this.objdiv=document.createElement("div");
+					this.objdiv.setAttribute("class","ball");
+					this.objdiv.style.width=this.w+'px';
+					this.objdiv.style.height=this.h+'px';
+					this.setposition(this.l,this.t);
+					document.getElementsByClassName("box")[0].appendChild(this.objdiv);
+					
+				};
+				
+				
+				this.setposition=function(x,y){
+					var x=x<this.w*-1?width:x;
+					var x=x>width?this.w*-1:x;
+					var y=y<this.h*-1?height:y;
+					var y=y>height?this.h*-1:y;
+					this.l=x;
+					this.t=y;
+					this.objdiv.style.top=this.t+"px";
+					this.objdiv.style.left=this.l+'px';
+
+				};
+				
+				
+				this.moving=function(){
+					var x=this.l+this.vx;
+					var y=this.t+this.vy;
+				    this.setposition(x,y);
+				    
+				    
+				};
+				this.boom=function(){
+						var b=this.check();
+						console.log(b)
+						if(b!=null){
+							if(b.isred){
+							    this.angle=(this.angle+180)%360
+							 	this.vx=Math.cos(Math.PI/180*this.angle)*this.v;
+								this.vy=Math.sin(Math.PI/180*this.angle)*this.v;
+							}else{
+							   var tmp=this.vx;
+							   this.vx=b.vx;
+							   b.vx=tmp;
+							   lmp=this.vy;
+							   this.yx=b.vy;
+							   b.vy=lmp;
+							   var f=0;
+							   while(this.anther(b)==true&&(!b.isred)){
+								   f++;
+								    b.moving();
+								    if(f>1000)
+								    return;
+								 }   
+							}
+							
+						
+						}
+						
+					
+					
+					
+				};
+				
+				this.check=function(){
+					 for(var i=0;i<balls.length;i++){
+					 	if(this!=balls[i]){
+					 		var l=Math.pow(((this.l+this.w/2)-(balls[i].l+balls[i].w/2)),2)+Math.pow(((this.t+this.w/2)-(balls[i].t+balls[i].w/2)),2);
+						 	if(l<Math.pow((this.w/2+balls[i].w/2),2)){
+						 		return balls[i];
+						 	}
+					 	}
+					 }
+					 return null;
+				};
+				this.anther=function(b){
+					 var l=Math.pow(((this.l+this.w/2)-(b.l+b.w/2)),2)+Math.pow(((this.t+this.w/2)-(b.t+b.w/2)),2);
+							if(l<Math.pow((this.w/2+b.w/2),2)){
+								return true;
+							}else{
+							return false;
+							}
+				}
+				
+				this.init();
+				
+				
+			}
+			var redball={};
+			redball.__proto__=new Bubble();
+			this.isred=true;
+			redball.objdiv.style.backgroundImage="url(img/blue.png)";
+			balls.push(redball);
+			redball.moving=function(){};
+			document.getElementsByClassName("box")[0].onmousemove=function(e){
+			   var x=e.pageX-this.offsetLeft;
+			   var y=e.pageY-this.offsetTop;
+			   redball.setposition(x-redball.w/2,y-redball.h/2);
+			
+			
+			}
+			
+			
+			for(var i=0;i<20;i++){
+					var b=new Bubble();
+					balls.push(b)
+				};
+				
+			var id=setInterval(function(){
+				
+				for(var j=0;j<balls.length;j++){
+					balls[j].moving();
+					balls[j].boom();
+					
+				}
+			},50)
+		</script>
+	</body>
+</html>
